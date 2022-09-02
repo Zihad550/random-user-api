@@ -7,7 +7,7 @@ const userRoutes = require('./routes/v1/user.route');
 
 
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT || 9000;
 
 // global middleware
 app.use(cors());
