@@ -42,8 +42,7 @@ module.exports.getAllUsers = async(req, res) => {
 
 module.exports.saveAnUser = async (req, res) => {
 
-    let data = fs.readFileSync('test.json')
-    data = JSON.parse(data.toString())
+    
     const newUser = req.body;
     if(!newUser.id) return;
     if(!newUser.gender) return;
@@ -51,6 +50,8 @@ module.exports.saveAnUser = async (req, res) => {
     if(!newUser.contact) return;
     if(!newUser.address) return;
     if(!newUser.photoUrl) return;
+    let data = fs.readFileSync('test.json')
+    data = JSON.parse(data.toString())
      data.push(newUser)
      fs.writeFile('test.json', JSON.stringify(data),  (error) => {
         if(error){
@@ -65,4 +66,28 @@ module.exports.saveAnUser = async (req, res) => {
             message: 'User saved successfully'
         })
     })
+}
+
+
+module.exports.updateAnUser = (req, res) => {
+    const newUser = req.body;
+    if(!newUser.id) return;
+    if(!newUser.gender) return;
+    if(!newUser.name) return;
+    if(!newUser.contact) return;
+    if(!newUser.address) return;
+    if(!newUser.photoUrl) return;
+
+    let data = fs.readFileSync('test.json')
+    data = JSON.parse(data.toString())
+    let user = data.find(user => user.id === newUser.id)
+    user = {
+        id: newUser.id || user.id,
+        gender: newUser.gender || user.gender,
+        name: newUser.name || user.name,
+        contact: newUser.contact || user.contact,
+        address: newUser.address || user.address,
+    }
+    console.log('an user updated')
+    res.end()
 }
