@@ -39,3 +39,7 @@ module.exports.getAllUsers = async(req, res) => {
         })
     })
 }
+
+module.exports.saveAnUser = async(req, res) => {
+    console.log('user saved')
+}
