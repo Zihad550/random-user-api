@@ -1,0 +1,26 @@
+[
+  {
+    "id": "34i545yui4hjjkj",
+    "gender": "male",
+    "name": "Finn",
+    "contact": "(437)-927-1258",
+    "address": "Maunganui Road",
+    "photoUrl": "https://randomuser.me/api/portraits/med/men/73.jpg"
+  },
+  {
+    "id": "jljiioej098753454",
+    "gender": "male",
+    "name": "Kiyan",
+    "contact": "(067) U07-6530",
+    "address": "Ukraine",
+    "photoUrl": "https://randomuser.me/api/portraits/med/men/54.jpg"
+  },
+  {
+    "id": "test",
+    "gender": "tes",
+    "name": "test",
+    "contact": "(067) U07-6530",
+    "address": "test",
+    "photoUrl": "https://randomuser.me/api/portraits/med/men/54.jpg"
+  }
+]

@@ -40,6 +40,29 @@ module.exports.getAllUsers = async(req, res) => {
     })
 }
 
-module.exports.saveAnUser = async(req, res) => {
-    console.log('user saved')
+module.exports.saveAnUser = async (req, res) => {
+
+    let data = fs.readFileSync('test.json')
+    data = JSON.parse(data.toString())
+    const newUser = req.body;
+    if(!newUser.id) return;
+    if(!newUser.gender) return;
+    if(!newUser.name) return;
+    if(!newUser.contact) return;
+    if(!newUser.address) return;
+    if(!newUser.photoUrl) return;
+     data.push(newUser)
+     fs.writeFile('test.json', JSON.stringify(data),  (error) => {
+        if(error){
+            res.status(400).send({
+                type: 'Error',
+                message: 'Failed to save user',
+            })
+        }
+        
+        res.status(200).send({
+            type: 'Success',
+            message: 'User saved successfully'
+        })
+    })
 }
