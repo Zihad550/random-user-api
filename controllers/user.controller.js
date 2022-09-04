@@ -6,7 +6,7 @@ module.exports.getRandomUser = async(req, res) => {
     if(error){
         res.status(400).send({
             type: 'Error',
-            message: 'Failed to read data from file'
+            message: 'Failed to get data'
         })
     }
     const jsonData = JSON.parse(data.toString());
@@ -18,4 +18,24 @@ module.exports.getRandomUser = async(req, res) => {
         data: randomData
     })
    })
+}
+
+module.exports.getAllUsers = async(req, res) => {
+    fs.readFile('users.json', (error, data) => {
+        if(error){
+            res.status(400).send({
+                type: 'Error',
+                message: 'Failed to get data',
+            })
+        }
+        const {limit} = req.query;
+        console.log('limit here',limit)
+        const jsonData = JSON.parse(data.toString());
+
+        res.status(200).send({
+            type: 'Success',
+            message: 'Successfully got data',
+            data: jsonData
+        })
+    })
 }
