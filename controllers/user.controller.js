@@ -85,11 +85,10 @@ module.exports.updateAnUser = (req, res) => {
     data = JSON.parse(data.toString())
     let updatedUser = data.find(user => user.id === newUser.id)
     if(!updatedUser) {
-        res.status(400).send({
+       return res.status(400).send({
             type: 'Error', 
             message: 'User not found'
         })
-       return res.end();
     }
 
     updatedUser = {
@@ -104,11 +103,10 @@ module.exports.updateAnUser = (req, res) => {
 
     fs.writeFile('test.json', JSON.stringify(unUpdatedUsers), (error) => {
         if(error){
-            res.status(400).send({
+           return res.status(400).send({
                 type: 'Error',
                 message: 'Unable to update user',
             })
-            return res.end()
         }
         res.status(200).send({
             type: 'Success',
@@ -142,6 +140,44 @@ module.exports.updateMultipleUsers = (req, res) => {
         }
         console.log('success')
     })
-    res.end()
     
+}
+
+
+module.exports.deleteAnUser = (req, res) => {
+    const {id} = req.body;
+
+    // verify id type & value
+    if(!id || typeof id !== 'string') {
+       return res.status(400).send({
+            type: 'Error',
+            message: 'User id is invalid!',
+        })
+    }
+
+    // get all users
+    const users = JSON.parse(fs.readFileSync('test.json').toString());
+    // remove the user
+    const remainedUsers = users.filter(user => user.id !== id);
+
+    if(users.length === remainedUsers.length) {
+        return res.status(400).send({
+            type: "Error",
+            message: "No user exists with the given id!!"
+        })
+    }
+
+    fs.writeFile('test.json', JSON.stringify(remainedUsers), (error) => {
+        if(error){
+            return res.status(400).send({
+                type: 'Error', 
+                message: 'Failed to delete the user'
+            })
+        }
+
+        res.status(200).send({
+            type: 'Success',
+            message: 'User Deleted successfully.'
+        })
+    })
 }
