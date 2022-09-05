@@ -10,4 +10,6 @@ router.post('/save', userController.saveAnUser)
 
 router.patch('/update', userController.updateAnUser)
 
+router.patch('/bulk-update', userController.updateMultipleUsers)
+
 module.exports = router;

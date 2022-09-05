@@ -116,3 +116,32 @@ module.exports.updateAnUser = (req, res) => {
         })
     })
 }
+
+module.exports.updateMultipleUsers = (req, res) => {
+    const {userIds, field, value} = req.body;
+    
+    // get all users
+    let users = JSON.parse(fs.readFileSync('debug.json').toString())
+    // console.log('update users', updateUsers)
+
+    // update users
+    const updatedUsers = users.map(user => {
+        userIds.find(id => {
+            if(user.id === id) {
+                return user[field] = value
+            }
+        })
+        return user;
+    }
+       
+    )
+    // console.log(updatedUsers)
+    fs.writeFile('debug.json', JSON.stringify(updatedUsers), (error) => {
+        if(error){
+            console.log('error')
+        }
+        console.log('success')
+    })
+    res.end()
+    
+}
