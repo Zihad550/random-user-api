@@ -4,11 +4,10 @@ const { getRandomData } = require('../utils');
 module.exports.getRandomUser = async(req, res) => {
    fs.readFile('users.json', (error, data) => {
     if(error){
-        res.status(400).send({
+       return res.status(400).send({
             type: 'Error',
             message: 'Failed to get data'
         })
-        return res.end()
     }
     const jsonData = JSON.parse(data.toString());
     const randomData = getRandomData(jsonData)
@@ -24,11 +23,10 @@ module.exports.getRandomUser = async(req, res) => {
 module.exports.getAllUsers = async(req, res) => {
     fs.readFile('users.json', (error, data) => {
         if(error){
-            res.status(400).send({
+          return res.status(400).send({
                 type: 'Error',
                 message: 'Failed to get data',
             })
-            return res.end()
         }
         const {limit} = req.query;
         console.log('limit here',limit)
@@ -43,25 +41,41 @@ module.exports.getAllUsers = async(req, res) => {
 }
 
 module.exports.saveAnUser = async (req, res) => {
-
-    
     const newUser = req.body;
-    if(!newUser.id) return;
-    if(!newUser.gender) return;
-    if(!newUser.name) return;
-    if(!newUser.contact) return;
-    if(!newUser.address) return;
-    if(!newUser.photoUrl) return;
+    if(!newUser.id) return res.status(400).send({
+        type: 'Error',
+        message: 'Id not provided'
+    });
+    if(!newUser.gender) return res.status(400).send({
+        type: 'Error',
+        message: 'Gender not provided'
+    });
+    if(!newUser.name) return res.status(400).send({
+        type: 'Error',
+        message: 'Name not provided'
+    });
+    if(!newUser.contact) return res.status(400).send({
+        type: 'Error',
+        message: 'Contact not provided'
+    });
+    if(!newUser.address) return res.status(400).send({
+        type: 'Error',
+        message: 'Address not provided'
+    });
+    if(!newUser.photoUrl) return res.status(400).send({
+        type: 'Error',
+        message: 'Photo url not provided'
+    });
+
     let data = fs.readFileSync('test.json')
     data = JSON.parse(data.toString())
      data.push(newUser)
      fs.writeFile('test.json', JSON.stringify(data),  (error) => {
         if(error){
-            res.status(400).send({
+           return res.status(400).send({
                 type: 'Error',
                 message: 'Failed to save user',
             })
-            return res.end()
         }
         
         res.status(200).send({
@@ -74,13 +88,12 @@ module.exports.saveAnUser = async (req, res) => {
 
 module.exports.updateAnUser = (req, res) => {
     const newUser = req.body;
-    if(!newUser.id) return;
-    if(!newUser.gender) return;
-    if(!newUser.name) return;
-    if(!newUser.contact) return;
-    if(!newUser.address) return;
-    if(!newUser.photoUrl) return;
 
+    if(!newUser.id || typeof id !== 'string') return res.status(400).send({
+        type: 'Error',
+        message: 'Invalid id'
+    });
+   
     let data = fs.readFileSync('test.json')
     data = JSON.parse(data.toString())
     let updatedUser = data.find(user => user.id === newUser.id)
@@ -120,7 +133,6 @@ module.exports.updateMultipleUsers = (req, res) => {
     
     // get all users
     let users = JSON.parse(fs.readFileSync('debug.json').toString())
-    // console.log('update users', updateUsers)
 
     // update users
     const updatedUsers = users.map(user => {
@@ -133,12 +145,19 @@ module.exports.updateMultipleUsers = (req, res) => {
     }
        
     )
-    // console.log(updatedUsers)
-    fs.writeFile('debug.json', JSON.stringify(updatedUsers), (error) => {
+    fs.writeFile('user.json', JSON.stringify(updatedUsers), (error) => {
         if(error){
-            console.log('error')
+            return res.status(400).send({
+                type: 'Error',
+                message: 'Failed to update multiple users',
+                data: error,
+            }) 
         }
-        console.log('success')
+        res.status(200).send({
+            type: 'Success',
+            message: 'Users updated successfully',
+
+        })
     })
     
 }
@@ -160,6 +179,7 @@ module.exports.deleteAnUser = (req, res) => {
     // remove the user
     const remainedUsers = users.filter(user => user.id !== id);
 
+    // verify if user was deleted or not
     if(users.length === remainedUsers.length) {
         return res.status(400).send({
             type: "Error",
