@@ -131,7 +131,7 @@ module.exports.updateMultipleUsers = (req, res) => {
     const {userIds, field, value} = req.body;
     
     // get all users
-    let users = JSON.parse(fs.readFileSync('debug.json').toString())
+    let users = JSON.parse(fs.readFileSync('users.json').toString())
 
     // update users
     const updatedUsers = users.map(user => {
