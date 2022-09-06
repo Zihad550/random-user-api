@@ -29,8 +29,7 @@ module.exports.getAllUsers = async(req, res) => {
             })
         }
         const {limit} = req.query;
-        console.log('limit here',limit)
-        const jsonData = JSON.parse(data.toString());
+        const jsonData = JSON.parse(data.toString()).slice(0, limit);
 
         res.status(200).send({
             type: 'Success',
@@ -67,10 +66,10 @@ module.exports.saveAnUser = async (req, res) => {
         message: 'Photo url not provided'
     });
 
-    let data = fs.readFileSync('test.json')
+    let data = fs.readFileSync('users.json')
     data = JSON.parse(data.toString())
      data.push(newUser)
-     fs.writeFile('test.json', JSON.stringify(data),  (error) => {
+     fs.writeFile('users.json', JSON.stringify(data),  (error) => {
         if(error){
            return res.status(400).send({
                 type: 'Error',
@@ -94,7 +93,7 @@ module.exports.updateAnUser = (req, res) => {
         message: 'Invalid id'
     });
    
-    let data = fs.readFileSync('test.json')
+    let data = fs.readFileSync('users.json')
     data = JSON.parse(data.toString())
     let updatedUser = data.find(user => user.id === newUser.id)
     if(!updatedUser) {
@@ -114,7 +113,7 @@ module.exports.updateAnUser = (req, res) => {
     const unUpdatedUsers = data.filter(user => user.id !== newUser.id);
     unUpdatedUsers.push(updatedUser)
 
-    fs.writeFile('test.json', JSON.stringify(unUpdatedUsers), (error) => {
+    fs.writeFile('users.json', JSON.stringify(unUpdatedUsers), (error) => {
         if(error){
            return res.status(400).send({
                 type: 'Error',
@@ -145,7 +144,7 @@ module.exports.updateMultipleUsers = (req, res) => {
     }
        
     )
-    fs.writeFile('user.json', JSON.stringify(updatedUsers), (error) => {
+    fs.writeFile('users.json', JSON.stringify(updatedUsers), (error) => {
         if(error){
             return res.status(400).send({
                 type: 'Error',
@@ -175,7 +174,7 @@ module.exports.deleteAnUser = (req, res) => {
     }
 
     // get all users
-    const users = JSON.parse(fs.readFileSync('test.json').toString());
+    const users = JSON.parse(fs.readFileSync('users.json').toString());
     // remove the user
     const remainedUsers = users.filter(user => user.id !== id);
 
@@ -187,7 +186,7 @@ module.exports.deleteAnUser = (req, res) => {
         })
     }
 
-    fs.writeFile('test.json', JSON.stringify(remainedUsers), (error) => {
+    fs.writeFile('users.json', JSON.stringify(remainedUsers), (error) => {
         if(error){
             return res.status(400).send({
                 type: 'Error', 
